@@ -1,0 +1,13 @@
+name: CreditCard
+title: CreditCard
+username:
+account: swastikanata
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9233442
+bundleId: 7295211
+url: https://swastikanata.shinyapps.io/CreditCard/
+when: 1685681145.14926
+lastSyncTime: 1685681145.14927
+asMultiple: FALSE
+asStatic: FALSE
