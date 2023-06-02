@@ -10,7 +10,6 @@ output:
     social: menu
     navbar:
       - {title: "Data source", href: "https://www.kaggle.com/sakshigoyal7/credit-card-customers", icon: "far fa-clipboard"}
-
 ---
 
 ```{r global, include=FALSE}
@@ -24,7 +23,7 @@ library(shiny)
 
 data = read.csv("BankChurners.csv")
 
-Categorical.Variables = c("Gender", "Education_Level", "Marital_Status")
+Categorical.Variables = c("Gender", "Education_Level", "Marital_Status", "Attrition_Flag")
 
 Numeric.Variables = c("Customer_Age", "Total_Trans_Ct", "Credit_Limit")
 
@@ -43,8 +42,8 @@ theme = theme_ipsum() + theme(plot.caption = element_text(hjust=0, size=8),
 
 # Graphs
 
-Column {.sidebar data-width=300}
--------------------------------------------------------------------
+## Column {.sidebar data-width="300"}
+
 **Data description**
 
 This dataset consists of 10,000 customers mentioning their age, salary, marital_status, credit card limit, credit card category, among others.
@@ -64,13 +63,13 @@ sliderInput(inputId="bw_adjust", label ="Density plot bandwidth adjustment:",
 
 ```
 
-Row 
--------------------------------------------------------------------
+## Row
 
-### **Density plot** 
+### **Density plot**
+
 ```{r density}
 renderPlotly({
-  p1 = ggplot(data, aes_string(x=input$numeric_variable, fill=input$categorical_variable)) +
+  p1 <- ggplot(data, aes_string(x=input$numeric_variable, fill=input$categorical_variable)) +
    geom_density(alpha = 0.4, bw = input$bw_adjust) +
     theme + scale_fill_viridis(discrete = T, alpha=0.8, option="A") 
   
@@ -80,42 +79,37 @@ renderPlotly({
 
 ```
 
+## Row
 
+### **Box plot**
 
-
-Row 
--------------------------------------------------------------------
-
-### **Box plot** 
 ```{r boxplot}
-renderPlot({
-  
-  p = ggplot(data, aes_string(x = input$numeric_variable, 
-                              y = input$categorical_variable,  
-                              fill = input$categorical_variable)) +
-    geom_boxplot() + 
-             scale_fill_viridis(discrete = T, alpha=0.4, option="A") +
-              theme 
-  
-  print(p)
-
-}, res=100)
+renderPlotly({
+   plot_ly(data,
+              x = ~data[[input$numeric_variable]],
+              color = ~data[[input$categorical_variable]],
+              type = "box")  %>%
+  layout(title = "",
+         xaxis = list(title = "" ,
+                      zeroline = FALSE))
+})
 ```
 
+### **Bar chart**
 
-### **Bar chart** 
 ```{r bar}
-renderPlot({
-  p2 = ggplot(data, aes_string( x = input$categorical_variable, 
+renderPlotly({
+  p2 <- ggplot(data, aes_string( x = input$categorical_variable, 
                                 fill=input$categorical_variable)) +
     geom_bar() +  theme + theme(axis.text.x=element_blank()) + 
     scale_fill_viridis(discrete = T, alpha=0.4, option="A") 
   
-  print(p2)
-}, res=100)
+  ggplotly(p2, res=100)
+})
 ```
 
 # Table
+
 ```{r table}
 renderDT(
   data2,
@@ -129,4 +123,3 @@ renderDT(
         )
     )
 ```
-
